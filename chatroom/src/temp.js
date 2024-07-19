@@ -24,22 +24,12 @@ const firestore = getFirestore(app);
 
 function App() {
   const [user] = useAuthState(auth);
-  const [darkMode, setDarkMode] = useState(false);
-
-  const toggleDarkMode = () => {
-    setDarkMode(!darkMode);
-  }
 
   return (
-    <div className={`App ${darkMode ? 'dark-mode' : ''}`}>
+    <div className="App">
       <header>
         <h1>Chatroom</h1>
-        <div>
-          <button className="dark-mode-toggle" onClick={toggleDarkMode}>
-            {darkMode ? 'Light Mode' : 'Dark Mode'}
-          </button>
-          <SignOut />
-        </div>
+        <SignOut />
       </header>
       <section>
         {user ? <ChatRoom /> : <SignIn />}

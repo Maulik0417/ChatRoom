@@ -1,45 +1,60 @@
 body {
-  background-color: #282c34;
+  background-color: #f0f2f5;
+  margin: 0;
+  font-family: 'Roboto', sans-serif;
+  color: #333;
+  height: 100vh;
+  overflow: hidden;
 }
 
 .App {
   text-align: center;
-  max-width: 728px;
-  margin: 0 auto;
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 .App header {
-  background-color: #181717;
+  background-color: #4a90e2;
   height: 10vh;
-  min-height: 50px;
   color: white;
-  position: fixed;
-  width: 100%;
-  max-width: 728px;
-  top: 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  z-index: 99;
-  padding: 10px;
+  padding: 0 20px;
   box-sizing: border-box;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+}
+
+.App header h1 {
+  font-size: 1.5rem;
 }
 
 .App section {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  min-height: 100vh;
-  background-color: rgb(40, 37, 53);
+  flex-grow: 1;
+  background-color: white;
+  padding: 10px;
+  box-sizing: border-box;
+  margin-top: 10vh; /* Adjust for header height */
+  height: 90vh;
 }
 
 main {
   padding: 10px;
-  height: 80vh;
-  margin: 10vh 0 10vh;
+  flex-grow: 1;
   overflow-y: scroll;
   display: flex;
   flex-direction: column;
+  padding-bottom: 12vh; /* Added padding to prevent last message from being hidden */
 }
 
 main::-webkit-scrollbar {
@@ -47,51 +62,44 @@ main::-webkit-scrollbar {
 }
 
 main::-webkit-scrollbar-track {
-  background: #1e1e24;
+  background: #e0e0e0;
 }
 
 main::-webkit-scrollbar-thumb {
-  background: #6649b8;
+  background: #4a90e2;
+  border-radius: 10px;
 }
 
 form {
   height: 10vh;
   position: fixed;
   bottom: 0;
-  background-color: rgb(24, 23, 23);
+  background-color: white;
   width: 100%;
-  max-width: 728px;
   display: flex;
-  font-size: 1.5rem;
+  font-size: 1.25rem;
+  border-top: 1px solid #ddd;
+}
+
+form input {
+  line-height: 1.5;
+  width: 80%;
+  font-size: 1.25rem;
+  padding: 10px;
+  border: none;
+  outline: none;
 }
 
 form button {
   width: 20%;
-  background-color: rgb(56, 56, 143);
-}
-
-
-input {
-  line-height: 1.5;
-  width: 100%;
-  font-size: 1.5rem;
-  background: rgb(58, 58, 58);
+  background-color: #4a90e2;
   color: white;
-  outline: none;
   border: none;
-  padding: 0 10px;
-}
-
-button {
-  background-color: #282c34; /* Green */
-  border: none;
-  color: white;
-  padding: 15px 32px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
   cursor: pointer;
-  font-size: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
 }
 
 button:disabled {
@@ -99,56 +107,136 @@ button:disabled {
   cursor: not-allowed;
 }
 
-
 .sign-in {
-  color: #282c34;
-  background: white;
-  max-width: 400px;
+  color: white;
+  background: #4a90e2;
   margin: 0 auto;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 1.25rem;
+  cursor: pointer;
 }
 
+.sign-out {
+  background: #d9534f;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+}
 
-
+.dark-mode-toggle {
+  background: #333;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-right: 10px;
+}
 
 ul, li {
   text-align: left;
   list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
 p {
-  max-width: 500px;
+  max-width: 70%;
   margin-bottom: 12px;
-  line-height: 24px;
+  line-height: 1.5;
   padding: 10px 20px;
   border-radius: 25px;
   position: relative;
-  color: white;
-  text-align: center;
+  text-align: left;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  word-wrap: break-word;
 }
 
 .message {
   display: flex;
   align-items: center;
+  margin: 10px 0;
 }
-
 
 .sent {
   flex-direction: row-reverse;
 }
 
 .sent p {
+  background: #4a90e2;
   color: white;
-  background: #0b93f6;
   align-self: flex-end;
 }
+
 .received p {
-  background: #e5e5ea;
-  color: black;
+  background: #f1f0f0;
+  color: #333;
 }
 
 img {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  margin: 2px 5px;
+  margin: 0 10px;
+}
+
+.dark-mode {
+  background-color: #121212;
+  color: white;
+}
+
+.dark-mode .App header {
+  background-color: #1f1f1f;
+}
+
+.dark-mode .App section {
+  background-color: #1e1e1e;
+}
+
+.dark-mode main::-webkit-scrollbar-track {
+  background: #333;
+}
+
+.dark-mode main::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+.dark-mode form {
+  background-color: #1f1f1f;
+  border-top: 1px solid #444;
+}
+
+.dark-mode form input {
+  background-color: #333;
+  color: white;
+}
+
+.dark-mode .sent p {
+  background: #333;
+  color: white;
+}
+
+.dark-mode .received p {
+  background: #444;
+  color: white;
+}
+
+.dark-mode .sign-in {
+  background: #333;
+  color: white;
+}
+
+.dark-mode .sign-out {
+  background: #d9534f;
+  color: white;
+}
+
+.dark-mode .dark-mode-toggle {
+  background: #f0f2f5;
+  color: #333;
 }
