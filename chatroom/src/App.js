@@ -1,5 +1,10 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import './App.css';
+
+import nightModeIcon from './pics/dark-mode.png';
+import sunIcon from './pics/sun.png';
+import sendIcon from './pics/send.png';
+import avatarpic from './pics/user.png'
 
 import { initializeApp } from 'firebase/app';
 import { getFirestore, collection, orderBy, query, addDoc, serverTimestamp, limit } from 'firebase/firestore';
@@ -26,17 +31,25 @@ function App() {
   const [user] = useAuthState(auth);
   const [darkMode, setDarkMode] = useState(false);
 
+  useEffect(() => {
+    if (darkMode) {
+      document.body.classList.add('dark-mode');
+    } else {
+      document.body.classList.remove('dark-mode');
+    }
+  }, [darkMode]);
+
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
-  }
+  };
 
   return (
-    <div className={`App ${darkMode ? 'dark-mode' : ''}`}>
+    <div className="App">
       <header>
         <h1>Chatroom</h1>
-        <div>
+        <div className="header-buttons">
           <button className="dark-mode-toggle" onClick={toggleDarkMode}>
-            {darkMode ? 'Light Mode' : 'Dark Mode'}
+            <img src={darkMode ? sunIcon : nightModeIcon} className="light-dark" alt="Toggle Dark Mode" />
           </button>
           <SignOut />
         </div>
@@ -57,7 +70,6 @@ function SignIn() {
   return (
     <>
       <button className="sign-in" onClick={signInWithGoogle}>Sign in with Google</button>
-      <p>Do not violate the community guidelines or you will be banned for life!</p>
     </>
   )
 }
@@ -100,8 +112,11 @@ function ChatRoom() {
       </main>
 
       <form onSubmit={sendMessage}>
-        <input value={formValue} onChange={(e) => setFormValue(e.target.value)} placeholder="say something nice" />
-        <button type="submit" disabled={!formValue}>🕊️</button>
+        <input value={formValue} onChange={(e) => setFormValue(e.target.value)} placeholder="Write Here!" />
+        <button type="submit" disabled={!formValue} >
+
+        <img src={sendIcon} alt="Send" className="send-icon" />
+        </button>
       </form>
     </>
   )
@@ -114,7 +129,7 @@ function ChatMessage(props) {
 
   return (
     <div className={`message ${messageClass}`}>
-      <img src={photoURL || 'https://api.adorable.io/avatars/23/abott@adorable.png'} alt="Avatar" />
+      <img src={photoURL || avatarpic} alt="Avatar" />
       <p>{text}</p>
     </div>
   )

@@ -7,6 +7,12 @@ body {
   overflow: hidden;
 }
 
+body.dark-mode {
+  background-color: #1c1c1c;
+}
+
+
+
 .App {
   text-align: center;
   margin: 0;
@@ -32,8 +38,29 @@ body {
   z-index: 1000;
 }
 
+body.dark-mode .App header{
+  background-color: #002855
+}
+
 .App header h1 {
   font-size: 1.5rem;
+}
+
+.header-buttons {
+  display: flex;
+  align-items: center;
+}
+
+.dark-mode-toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.dark-mode-toggle img {
+  width: 30px;
+  height: 30px;
 }
 
 .App section {
@@ -46,6 +73,10 @@ body {
   box-sizing: border-box;
   margin-top: 10vh; /* Adjust for header height */
   height: 90vh;
+}
+
+body.dark-mode .App section {
+  background-color: #1c1c1c;
 }
 
 main {
@@ -81,6 +112,11 @@ form {
   border-top: 1px solid #ddd;
 }
 
+body.dark-mode form {
+  background-color: #333;
+  border-top: 1px solid #888888;
+}
+
 form input {
   line-height: 1.5;
   width: 80%;
@@ -88,6 +124,12 @@ form input {
   padding: 10px;
   border: none;
   outline: none;
+  margin:0;
+}
+
+body.dark-mode form input {
+  background-color: #1c1c1c;
+  color: white;
 }
 
 form button {
@@ -101,6 +143,11 @@ form button {
   justify-content: center;
   font-size: 1.5rem;
 }
+
+body.dark-mode form button{
+  background-color: #002855
+}
+
 
 button:disabled {
   opacity: 0.5;
@@ -125,17 +172,6 @@ button:disabled {
   border-radius: 8px;
   font-size: 1rem;
   cursor: pointer;
-}
-
-.dark-mode-toggle {
-  background: #333;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 8px;
-  font-size: 1rem;
-  cursor: pointer;
-  margin-right: 10px;
 }
 
 ul, li {
@@ -178,6 +214,15 @@ p {
   color: #333;
 }
 
+body.dark-mode .received p {
+  background: #555;
+  color: white;
+}
+body.dark-mode .sent p {
+  background: #002855;
+  color: white;
+}
+
 img {
   width: 40px;
   height: 40px;
@@ -185,58 +230,10 @@ img {
   margin: 0 10px;
 }
 
-.dark-mode {
-  background-color: #121212;
-  color: white;
+.send-icon{
+  width: 45px;
+  height: 45px;
+  margin: 0 10px;
+  border-radius: 0%;
 }
 
-.dark-mode .App header {
-  background-color: #1f1f1f;
-}
-
-.dark-mode .App section {
-  background-color: #1e1e1e;
-}
-
-.dark-mode main::-webkit-scrollbar-track {
-  background: #333;
-}
-
-.dark-mode main::-webkit-scrollbar-thumb {
-  background: #888;
-}
-
-.dark-mode form {
-  background-color: #1f1f1f;
-  border-top: 1px solid #444;
-}
-
-.dark-mode form input {
-  background-color: #333;
-  color: white;
-}
-
-.dark-mode .sent p {
-  background: #333;
-  color: white;
-}
-
-.dark-mode .received p {
-  background: #444;
-  color: white;
-}
-
-.dark-mode .sign-in {
-  background: #333;
-  color: white;
-}
-
-.dark-mode .sign-out {
-  background: #d9534f;
-  color: white;
-}
-
-.dark-mode .dark-mode-toggle {
-  background: #f0f2f5;
-  color: #333;
-}
