@@ -5,9 +5,8 @@ import nightModeIcon from './pics/dark-mode.png';
 import sunIcon from './pics/sun.png';
 import sendIcon from './pics/send.png';
 import avatarpic from './pics/user.png'
-// test
 import { initializeApp } from 'firebase/app';
-import { getFirestore, collection, orderBy, query, addDoc, serverTimestamp, limit } from 'firebase/firestore';
+import { getFirestore, collection, orderBy, query, addDoc, serverTimestamp } from 'firebase/firestore';
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth';
 
 import { useAuthState } from 'react-firebase-hooks/auth';
