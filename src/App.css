@@ -248,12 +248,21 @@ img {
   .send-icon{
     width: 25px;
   height: 25px;
+  margin-right: 20px;
   }
 
   .sign-out {
-    background: #d9534f;
-    padding: 5px 10px;
-    border-radius: 8px;
-    font-size: 0.8rem;
+    padding: 10px 10px;
   }
 }
+
+@media (max-width: 500px) {
+.App header {
+  padding: 5px;
+
+}}
+
+@media (max-width: 275px) {
+  .sign-out {
+    padding: 10px 5px;
+  }}
