@@ -236,3 +236,24 @@ img {
   margin: 0 10px;
   border-radius: 0%;
 }
+
+@media (max-width: 768px) {
+  .send-icon{
+    width: 30px;
+  height: 30px;
+  }
+}
+
+@media (max-width: 600px) {
+  .send-icon{
+    width: 25px;
+  height: 25px;
+  }
+
+  .sign-out {
+    background: #d9534f;
+    padding: 5px 10px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+  }
+}
