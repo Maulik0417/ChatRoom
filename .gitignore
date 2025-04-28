@@ -69,3 +69,12 @@ node_modules/
 .dataconnect
 
 TODO.md
+
+# production
+/build
+
+# dependencies
+/node_modules
+
+# misc
+.DS_Store
