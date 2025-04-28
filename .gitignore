@@ -71,7 +71,7 @@ node_modules/
 TODO.md
 
 # production
-# /build
+build/
 
 # dependencies
 # misc
