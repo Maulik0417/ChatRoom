@@ -261,9 +261,14 @@ img {
 
 }}
 
+@media (max-width: 350px) {
+.App header h1 {
+  font-size: 1.25rem;
+}}
+
 @media (max-width: 275px) {
   .sign-out {
     padding: 10px 5px;
-    font-size: 0.75rem;
+    font-size: 0.70rem;
     margin-right:5px;
   }}
