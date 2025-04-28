@@ -268,7 +268,7 @@ img {
 
 @media (max-width: 275px) {
   .sign-out {
-    padding: 10px 5px;
+    padding: 5px 1px;
     font-size: 0.70rem;
     margin-right:5px;
   }}
