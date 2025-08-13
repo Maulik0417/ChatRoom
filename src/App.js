@@ -5,8 +5,19 @@ import nightModeIcon from './pics/dark-mode.png';
 import sunIcon from './pics/sun.png';
 import sendIcon from './pics/send.png';
 import avatarpic from './pics/user.png'
+
 import { initializeApp } from 'firebase/app';
-import { getFirestore, collection, orderBy, query, addDoc, serverTimestamp, deleteDoc, doc} from 'firebase/firestore';
+import { 
+  getFirestore, 
+  collection, 
+  orderBy, 
+  query, 
+  addDoc, 
+  serverTimestamp,
+  deleteDoc,
+  doc
+} from 'firebase/firestore';
+
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth';
 
 import { useAuthState } from 'react-firebase-hooks/auth';
@@ -106,15 +117,18 @@ function ChatRoom() {
   return (
     <>
       <main>
-        {messages && messages.map(msg => <ChatMessage key={msg.id} message={msg} />)}
+        {messages && messages.map(msg => {
+          // Optional debug log to check id presence
+          // console.log(msg);
+          return <ChatMessage key={msg.id} message={msg} />
+        })}
         <span ref={dummy}></span>
       </main>
 
       <form onSubmit={sendMessage}>
         <input value={formValue} onChange={(e) => setFormValue(e.target.value)} placeholder="Write Here!" />
         <button type="submit" disabled={!formValue} >
-
-        <img src={sendIcon} alt="Send" className="send-icon" />
+          <img src={sendIcon} alt="Send" className="send-icon" />
         </button>
       </form>
     </>
@@ -126,8 +140,12 @@ function ChatMessage(props) {
 
   const messageClass = uid === auth.currentUser.uid ? 'sent' : 'received';
 
-  // Function to handle deleting the message
   const handleDelete = async () => {
+    if (!id) {
+      alert("Cannot delete: message id missing");
+      return;
+    }
+
     const confirmDelete = window.confirm('Are you sure you want to delete this message?');
     if (!confirmDelete) return;
 
@@ -144,7 +162,6 @@ function ChatMessage(props) {
     <div className={`message ${messageClass}`}>
       <img src={photoURL || avatarpic} alt="Avatar" />
       <p>{text}</p>
-      {/* Show delete button only for messages sent by current user */}
       {uid === auth.currentUser.uid && (
         <button onClick={handleDelete} className="delete-button" title="Delete message">
           &#10006;
