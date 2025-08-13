@@ -4,7 +4,7 @@ import './App.css';
 import nightModeIcon from './pics/dark-mode.png';
 import sunIcon from './pics/sun.png';
 import sendIcon from './pics/send.png';
-import avatarpic from './pics/user.png'
+import avatarpic from './pics/user.png';
 
 import { initializeApp } from 'firebase/app';
 import { 
@@ -21,7 +21,7 @@ import {
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth';
 
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { useCollectionData } from 'react-firebase-hooks/firestore';
+import { useCollection } from 'react-firebase-hooks/firestore';
 
 const firebaseConfig = {
   apiKey: "AIzaSyDbPNrpMoxEgKgh34NstKV09p-y9fZYBEY",
@@ -75,26 +75,32 @@ function SignIn() {
   const signInWithGoogle = () => {
     const provider = new GoogleAuthProvider();
     signInWithPopup(auth, provider);
-  }
+  };
 
   return (
     <>
       <button className="sign-in" onClick={signInWithGoogle}>Sign in with Google</button>
     </>
-  )
+  );
 }
 
 function SignOut() {
   return auth.currentUser && (
     <button className="sign-out" onClick={() => signOut(auth)}>Sign Out</button>
-  )
+  );
 }
 
 function ChatRoom() {
   const dummy = useRef();
   const messagesRef = collection(firestore, 'messages');
   const q = query(messagesRef, orderBy('createdAt'));
-  const [messages] = useCollectionData(q, { idField: 'id' });
+
+  const [snapshot] = useCollection(q);
+
+  const messages = snapshot?.docs.map(doc => ({
+    id: doc.id,
+    ...doc.data()
+  })) || [];
 
   const [formValue, setFormValue] = useState('');
 
@@ -108,31 +114,31 @@ function ChatRoom() {
       createdAt: serverTimestamp(),
       uid,
       photoURL
-    })
+    });
 
     setFormValue('');
     dummy.current.scrollIntoView({ behavior: 'smooth' });
-  }
+  };
 
   return (
     <>
       <main>
-        {messages && messages.map(msg => {
-          // Optional debug log to check id presence
-          // console.log(msg);
-          return <ChatMessage key={msg.id} message={msg} />
-        })}
+        {messages.map(msg => <ChatMessage key={msg.id} message={msg} />)}
         <span ref={dummy}></span>
       </main>
 
       <form onSubmit={sendMessage}>
-        <input value={formValue} onChange={(e) => setFormValue(e.target.value)} placeholder="Write Here!" />
-        <button type="submit" disabled={!formValue} >
+        <input 
+          value={formValue} 
+          onChange={(e) => setFormValue(e.target.value)} 
+          placeholder="Write Here!" 
+        />
+        <button type="submit" disabled={!formValue}>
           <img src={sendIcon} alt="Send" className="send-icon" />
         </button>
       </form>
     </>
-  )
+  );
 }
 
 function ChatMessage(props) {
@@ -156,7 +162,7 @@ function ChatMessage(props) {
       console.error("Error deleting message: ", error);
       alert("Failed to delete message.");
     }
-  }
+  };
 
   return (
     <div className={`message ${messageClass}`}>
@@ -168,7 +174,7 @@ function ChatMessage(props) {
         </button>
       )}
     </div>
-  )
+  );
 }
 
 export default App;
