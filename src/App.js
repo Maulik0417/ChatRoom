@@ -6,7 +6,7 @@ import sunIcon from './pics/sun.png';
 import sendIcon from './pics/send.png';
 import avatarpic from './pics/user.png'
 import { initializeApp } from 'firebase/app';
-import { getFirestore, collection, orderBy, query, addDoc, serverTimestamp } from 'firebase/firestore';
+import { getFirestore, collection, orderBy, query, addDoc, serverTimestamp, deleteDoc, doc} from 'firebase/firestore';
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth';
 
 import { useAuthState } from 'react-firebase-hooks/auth';
@@ -122,14 +122,34 @@ function ChatRoom() {
 }
 
 function ChatMessage(props) {
-  const { text, uid, photoURL } = props.message;
+  const { text, uid, photoURL, id } = props.message;
 
   const messageClass = uid === auth.currentUser.uid ? 'sent' : 'received';
+
+  // Function to handle deleting the message
+  const handleDelete = async () => {
+    const confirmDelete = window.confirm('Are you sure you want to delete this message?');
+    if (!confirmDelete) return;
+
+    try {
+      const messageDoc = doc(firestore, 'messages', id);
+      await deleteDoc(messageDoc);
+    } catch (error) {
+      console.error("Error deleting message: ", error);
+      alert("Failed to delete message.");
+    }
+  }
 
   return (
     <div className={`message ${messageClass}`}>
       <img src={photoURL || avatarpic} alt="Avatar" />
       <p>{text}</p>
+      {/* Show delete button only for messages sent by current user */}
+      {uid === auth.currentUser.uid && (
+        <button onClick={handleDelete} className="delete-button" title="Delete message">
+          &#10006;
+        </button>
+      )}
     </div>
   )
 }

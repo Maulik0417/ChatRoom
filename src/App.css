@@ -274,3 +274,20 @@ img {
   margin-right:5px;
 }
 }
+
+.delete-button {
+  background: transparent;
+  border: none;
+  color: #c00;
+  font-size: 1.2rem;
+  cursor: pointer;
+  margin-left: 8px;
+  align-self: center;
+  padding: 0;
+  line-height: 1;
+  user-select: none;
+}
+
+.delete-button:hover {
+  color: #900;
+}
