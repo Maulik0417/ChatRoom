@@ -214,12 +214,18 @@ function ChatMessage({ message }) {
         className="rounded-circle me-2" 
         style={{width: 40, height: 40}} 
       />
-      <p 
-        className={`p-3 rounded-pill shadow-sm mb-0 ${messageClass}`} 
-        style={{maxWidth: '70%', wordWrap: 'break-word'}}
-      >
-        {text}
-      </p>
+    <p 
+  className={`p-3 rounded-pill shadow-sm mb-0 ${messageClass}`} 
+  style={{
+    maxWidth: '70%',
+    minWidth: '70px', // ✅ Minimum width
+    wordWrap: 'break-word',
+    marginRight: isSent ? '10px' : '0', // ✅ Gap from avatar for sent
+    textAlign: 'center'
+  }}
+>
+  {text}
+</p>
 
       {contextMenuVisible && (
         <div 
