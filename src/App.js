@@ -159,11 +159,32 @@ function ChatMessage({ message }) {
   const isSent = uid === auth.currentUser.uid;
   const messageClass = isSent ? 'sent' : 'received';
 
-  const handleDelete = async () => {
-    if (!id) {
-      alert("Cannot delete: message id missing");
-      return;
+  const [contextMenuVisible, setContextMenuVisible] = useState(false);
+  const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
+  const contextRef = useRef();
+
+  const handleContextMenu = (e) => {
+    if (!isSent) return;
+
+    e.preventDefault();
+    setMenuPosition({ x: e.pageX, y: e.pageY });
+    setContextMenuVisible(true);
+  };
+
+  const handleClickOutside = (e) => {
+    if (contextRef.current && !contextRef.current.contains(e.target)) {
+      setContextMenuVisible(false);
     }
+  };
+
+  useEffect(() => {
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, []);
+
+  const handleDelete = async () => {
+    setContextMenuVisible(false);
+    if (!id) return alert("Cannot delete: message id missing");
 
     const confirmDelete = window.confirm('Are you sure you want to delete this message?');
     if (!confirmDelete) return;
@@ -177,13 +198,21 @@ function ChatMessage({ message }) {
     }
   };
 
+  const handleEdit = () => {
+    setContextMenuVisible(false);
+    alert("Edit feature coming soon!");
+  };
+
   return (
-    <div className={`d-flex align-items-center my-2 ${isSent ? 'flex-row-reverse' : ''}`}>
+    <div 
+      className={`d-flex align-items-center my-2 ${isSent ? 'flex-row-reverse' : ''}`} 
+      onContextMenu={handleContextMenu}
+    >
       <img 
         src={photoURL || avatarpic} 
         alt="Avatar" 
         className="rounded-circle me-2" 
-        style={{width: 40, height: 40, marginLeft: isSent ? '0.5rem' : '', marginRight: isSent ? '' : '0.5rem'}} 
+        style={{width: 40, height: 40}} 
       />
       <p 
         className={`p-3 rounded-pill shadow-sm mb-0 ${messageClass}`} 
@@ -191,15 +220,21 @@ function ChatMessage({ message }) {
       >
         {text}
       </p>
-      {isSent && (
-        <button 
-          onClick={handleDelete} 
-          className="btn btn-link text-danger p-0 ms-2" 
-          title="Delete message" 
-          style={{fontSize: '1.25rem', lineHeight: 1}}
+
+      {contextMenuVisible && (
+        <div 
+          ref={contextRef}
+          className="context-menu position-absolute bg-white border rounded shadow-sm"
+          style={{
+            top: menuPosition.y,
+            left: menuPosition.x,
+            zIndex: 9999,
+            minWidth: '120px'
+          }}
         >
-          &#10006;
-        </button>
+          <button className="dropdown-item" onClick={handleEdit}>Edit</button>
+          <button className="dropdown-item text-danger" onClick={handleDelete}>Delete</button>
+        </div>
       )}
     </div>
   );
