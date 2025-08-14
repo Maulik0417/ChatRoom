@@ -132,7 +132,11 @@ function ChatRoom() {
         <span ref={dummy}></span>
       </main>
 
-      <form onSubmit={sendMessage} className={`position-fixed bottom-0 w-100 d-flex align-items-center px-3 py-2 ${auth.currentUser && 'bg-white'}`} style={{borderTop: '1px solid #ddd', height: '10vh', backgroundColor: 'inherit'}}>
+     <form
+  onSubmit={sendMessage}
+  className="chat-form position-fixed bottom-0 w-100 d-flex align-items-center px-3 py-2"
+  style={{ height: '10vh' }}
+>
         <input 
           type="text"
           value={formValue} 

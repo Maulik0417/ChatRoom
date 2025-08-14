@@ -32,3 +32,35 @@ body.dark-mode .sent {
   background-color: #002855 !important;
   color: white !important;
 }
+
+
+body.dark-mode form input::placeholder {
+  color: white;
+}
+
+body.dark-mode form button{
+
+  background-color: #002855;
+  border-color: #002855;
+
+}
+
+body.dark-mode form button:disabled{
+  background-color: #002855;
+  border-color: #002855;
+
+}
+
+body.dark-mode .chat-form input {
+  background-color: #1e1e1e;
+  color: #fff;
+  border-color: #002855;
+}
+
+.chat-form{
+  border-top: 1px solid #ddd;;
+}
+
+body.dark-mode .chat-form{
+  border-top: 1px solid #002855;;
+}
