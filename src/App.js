@@ -103,7 +103,7 @@ function ChatRoom() {
 
   const [snapshot] = useCollection(q);
   const [formValue, setFormValue] = useState('');
-  const [editingId, setEditingId] = useState(null); // New state for editing
+  const [editingId, setEditingId] = useState(null);
 
   const messages = snapshot?.docs.map(doc => ({
     id: doc.id,
@@ -176,12 +176,33 @@ function ChatMessage({ message, editingId, setEditingId }) {
   const [editText, setEditText] = useState(text);
   const contextRef = useRef();
 
+  // Ref and timers for detecting long press on touch devices
+  const touchTimerRef = useRef(null);
+
   const handleContextMenu = (e) => {
     if (!isSent) return;
 
     e.preventDefault();
     setMenuPosition({ x: e.pageX, y: e.pageY });
     setContextMenuVisible(true);
+  };
+
+  const startTouchTimer = (e) => {
+    if (!isSent) return;
+    // Start timer for long press detection (~600ms)
+    touchTimerRef.current = setTimeout(() => {
+      e.preventDefault();
+      const touch = e.touches[0];
+      setMenuPosition({ x: touch.pageX, y: touch.pageY });
+      setContextMenuVisible(true);
+    }, 600);
+  };
+
+  const cancelTouchTimer = () => {
+    if (touchTimerRef.current) {
+      clearTimeout(touchTimerRef.current);
+      touchTimerRef.current = null;
+    }
   };
 
   const handleClickOutside = (e) => {
@@ -227,7 +248,6 @@ function ChatMessage({ message, editingId, setEditingId }) {
         newText: editText,
         editedAt: serverTimestamp()
       });
-      // await messageDoc.update({ text: editText });
       await updateDoc(messageDoc, { text: editText });
       setEditingId(null);
     } catch (error) {
@@ -240,6 +260,10 @@ function ChatMessage({ message, editingId, setEditingId }) {
     <div
       className={`d-flex align-items-center my-2 ${isSent ? 'flex-row-reverse' : ''}`}
       onContextMenu={handleContextMenu}
+      onTouchStart={startTouchTimer}
+      onTouchEnd={cancelTouchTimer}
+      onTouchMove={cancelTouchTimer}
+      onTouchCancel={cancelTouchTimer}
     >
       <img
         src={photoURL || avatarpic}
