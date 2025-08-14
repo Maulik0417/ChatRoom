@@ -176,9 +176,9 @@ function ChatMessage({ message, editingId, setEditingId }) {
   const [editText, setEditText] = useState(text);
   const contextRef = useRef();
 
-  // Ref and timers for detecting long press on touch devices
   const touchTimerRef = useRef(null);
 
+  // Right-click for desktop
   const handleContextMenu = (e) => {
     if (!isSent) return;
 
@@ -187,9 +187,10 @@ function ChatMessage({ message, editingId, setEditingId }) {
     setContextMenuVisible(true);
   };
 
+  // Long-press for mobile
   const startTouchTimer = (e) => {
     if (!isSent) return;
-    // Start timer for long press detection (~600ms)
+
     touchTimerRef.current = setTimeout(() => {
       e.preventDefault();
       const touch = e.touches[0];
@@ -205,6 +206,7 @@ function ChatMessage({ message, editingId, setEditingId }) {
     }
   };
 
+  // Hide context menu when clicking outside
   const handleClickOutside = (e) => {
     if (contextRef.current && !contextRef.current.contains(e.target)) {
       setContextMenuVisible(false);
@@ -246,7 +248,7 @@ function ChatMessage({ message, editingId, setEditingId }) {
       await addDoc(collection(firestore, 'edits'), {
         previousText: text,
         newText: editText,
-        editedAt: serverTimestamp()
+        editedAt: serverTimestamp(),
       });
       await updateDoc(messageDoc, { text: editText });
       setEditingId(null);
@@ -296,7 +298,9 @@ function ChatMessage({ message, editingId, setEditingId }) {
             minWidth: '70px',
             wordWrap: 'break-word',
             marginRight: isSent ? '10px' : '0',
-            textAlign: 'center'
+            textAlign: 'center',
+            userSelect: 'none',
+            WebkitUserSelect: 'none',
           }}
         >
           {text}

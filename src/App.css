@@ -89,3 +89,8 @@ body.dark-mode .context-menu {
 body.dark-mode .context-menu button:hover {
   background-color: #3a3a3a;
 }
+
+.message {
+  user-select: none; /* Prevents text selection */
+  -webkit-user-select: none; /* For Safari */
+}
