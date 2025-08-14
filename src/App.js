@@ -16,6 +16,7 @@ import {
   addDoc, 
   serverTimestamp,
   deleteDoc,
+  updateDoc,
   doc
 } from 'firebase/firestore';
 
@@ -101,13 +102,13 @@ function ChatRoom() {
   const q = query(messagesRef, orderBy('createdAt'));
 
   const [snapshot] = useCollection(q);
+  const [formValue, setFormValue] = useState('');
+  const [editingId, setEditingId] = useState(null); // New state for editing
 
   const messages = snapshot?.docs.map(doc => ({
     id: doc.id,
     ...doc.data()
   })) || [];
-
-  const [formValue, setFormValue] = useState('');
 
   const sendMessage = async (e) => {
     e.preventDefault();
@@ -127,40 +128,52 @@ function ChatRoom() {
 
   return (
     <>
-      <main className="flex-grow-1 overflow-auto px-3 d-flex flex-column" style={{paddingBottom: '12vh'}}>
-        {messages.map(msg => <ChatMessage key={msg.id} message={msg} />)}
+      <main className="flex-grow-1 overflow-auto px-3 d-flex flex-column" style={{ paddingBottom: '12vh' }}>
+        {messages.map(msg => (
+          <ChatMessage
+            key={msg.id}
+            message={msg}
+            editingId={editingId}
+            setEditingId={setEditingId}
+          />
+        ))}
         <span ref={dummy}></span>
       </main>
 
-     <form
-  onSubmit={sendMessage}
-  className="chat-form position-fixed bottom-0 w-100 d-flex align-items-center px-3 py-2"
-  style={{ height: '10vh' }}
->
-        <input 
+      <form
+        onSubmit={sendMessage}
+        className="chat-form position-fixed bottom-0 w-100 d-flex align-items-center px-3 py-2"
+        style={{ height: '10vh' }}
+      >
+        <input
           type="text"
-          value={formValue} 
-          onChange={(e) => setFormValue(e.target.value)} 
-          placeholder="Write Here!" 
-          className="form-control me-2" 
-          style={{fontSize: '1.25rem'}}
+          value={formValue}
+          onChange={(e) => setFormValue(e.target.value)}
+          placeholder="Write Here!"
+          className="form-control me-2"
+          style={{ fontSize: '1.25rem' }}
         />
-        <button type="submit" disabled={!formValue} className="btn btn-primary d-flex align-items-center justify-content-center" style={{width: '60px', height: '45px'}}>
-          <img src={sendIcon} alt="Send" style={{width: 25, height: 25}} />
+        <button
+          type="submit"
+          disabled={!formValue}
+          className="btn btn-primary d-flex align-items-center justify-content-center"
+          style={{ width: '60px', height: '45px' }}
+        >
+          <img src={sendIcon} alt="Send" style={{ width: 25, height: 25 }} />
         </button>
       </form>
     </>
   );
 }
 
-function ChatMessage({ message }) {
+function ChatMessage({ message, editingId, setEditingId }) {
   const { text, uid, photoURL, id } = message;
-
   const isSent = uid === auth.currentUser.uid;
   const messageClass = isSent ? 'sent' : 'received';
 
   const [contextMenuVisible, setContextMenuVisible] = useState(false);
   const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
+  const [editText, setEditText] = useState(text);
   const contextRef = useRef();
 
   const handleContextMenu = (e) => {
@@ -200,35 +213,74 @@ function ChatMessage({ message }) {
 
   const handleEdit = () => {
     setContextMenuVisible(false);
-    alert("Edit feature coming soon!");
+    setEditingId(id);
+    setEditText(text);
+  };
+
+  const handleSaveEdit = async () => {
+    if (!id) return;
+
+    try {
+      const messageDoc = doc(firestore, 'messages', id);
+      await addDoc(collection(firestore, 'edits'), {
+        previousText: text,
+        newText: editText,
+        editedAt: serverTimestamp()
+      });
+      // await messageDoc.update({ text: editText });
+      await updateDoc(messageDoc, { text: editText });
+      setEditingId(null);
+    } catch (error) {
+      console.error("Error updating message: ", error);
+      alert("Failed to update message.");
+    }
   };
 
   return (
-    <div 
-      className={`d-flex align-items-center my-2 ${isSent ? 'flex-row-reverse' : ''}`} 
+    <div
+      className={`d-flex align-items-center my-2 ${isSent ? 'flex-row-reverse' : ''}`}
       onContextMenu={handleContextMenu}
     >
-      <img 
-        src={photoURL || avatarpic} 
-        alt="Avatar" 
-        className="rounded-circle me-2" 
-        style={{width: 40, height: 40}} 
+      <img
+        src={photoURL || avatarpic}
+        alt="Avatar"
+        className="rounded-circle me-2"
+        style={{ width: 40, height: 40 }}
       />
-    <p 
-  className={`p-3 rounded-pill shadow-sm mb-0 ${messageClass}`} 
-  style={{
-    maxWidth: '70%',
-    minWidth: '70px', // ✅ Minimum width
-    wordWrap: 'break-word',
-    marginRight: isSent ? '10px' : '0', // ✅ Gap from avatar for sent
-    textAlign: 'center'
-  }}
->
-  {text}
-</p>
+
+      {editingId === id ? (
+        <div style={{ maxWidth: '70%' }}>
+          <input
+            className="form-control"
+            value={editText}
+            onChange={(e) => setEditText(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') handleSaveEdit();
+              if (e.key === 'Escape') setEditingId(null);
+            }}
+          />
+          <div className="mt-1 d-flex justify-content-end gap-2">
+            <button className="btn btn-sm btn-success" onClick={handleSaveEdit}>Save</button>
+            <button className="btn btn-sm btn-secondary" onClick={() => setEditingId(null)}>Cancel</button>
+          </div>
+        </div>
+      ) : (
+        <p
+          className={`p-3 rounded-pill shadow-sm mb-0 ${messageClass}`}
+          style={{
+            maxWidth: '70%',
+            minWidth: '70px',
+            wordWrap: 'break-word',
+            marginRight: isSent ? '10px' : '0',
+            textAlign: 'center'
+          }}
+        >
+          {text}
+        </p>
+      )}
 
       {contextMenuVisible && (
-        <div 
+        <div
           ref={contextRef}
           className="context-menu position-absolute bg-white border rounded shadow-sm"
           style={{
