@@ -112,11 +112,17 @@ function ChatRoom() {
     })) || [];
   }, [snapshot]);
 
-  useEffect(() => {
-    if (dummy.current) {
-      dummy.current.scrollIntoView({ behavior: 'smooth' });
-    }
-  }, [messages]);
+useEffect(() => {
+  if (dummy.current) {
+    const scrollContainer = dummy.current.parentElement;
+    const headerHeight = window.innerHeight * 0.1; // 10vh header height
+    // Scroll so dummy is just below the header:
+    scrollContainer.scrollTo({
+      top: dummy.current.offsetTop - headerHeight,
+      behavior: 'smooth',
+    });
+  }
+}, [messages]);
 
   const sendMessage = async (e) => {
     e.preventDefault();
@@ -137,7 +143,7 @@ function ChatRoom() {
       {/* Message area */}
       <div
         className="flex-grow-1 overflow-auto px-3 d-flex flex-column"
-        style={{ minHeight: 0, paddingTop: '10vh' }}
+        style={{ minHeight: 0}}
       >
         {messages.map(msg => (
           <ChatMessage
