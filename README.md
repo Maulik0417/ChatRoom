@@ -26,4 +26,4 @@ TRY IT NOW: https://chatroom-mann.web.app/
 ## 🌱 Future Improvements
 - Message reactions
 - Private chatrooms
-- Message deletion/editing
+
