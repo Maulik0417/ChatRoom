@@ -159,14 +159,12 @@ useEffect(() => {
       {/* Form area */}
       <form
         onSubmit={sendMessage}
-        className="chat-form w-100 d-flex align-items-center px-3 py-2 bg-body"
+        className="chat-form w-100 d-flex align-items-center px-3 py-2"
         style={{
           height: '60px',
-          borderTop: '1px solid #ddd',
           position: 'sticky',
           bottom: 0,
           zIndex: 999,
-          backgroundColor: 'inherit'
         }}
       >
         <input
