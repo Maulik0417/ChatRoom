@@ -143,7 +143,7 @@ useEffect(() => {
       {/* Message area */}
       <div
         className="flex-grow-1 overflow-auto px-3 d-flex flex-column"
-        style={{ minHeight: 0}}
+        style={{ paddingBottom: 'calc(10vh + 20px)', minHeight: 0 }}
       >
         {messages.map(msg => (
           <ChatMessage
