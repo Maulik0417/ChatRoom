@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useMemo } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 
@@ -105,14 +105,21 @@ function ChatRoom() {
   const [formValue, setFormValue] = useState('');
   const [editingId, setEditingId] = useState(null);
 
-  const messages = snapshot?.docs.map(doc => ({
-    id: doc.id,
-    ...doc.data()
-  })) || [];
+  const messages = useMemo(() => {
+    return snapshot?.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    })) || [];
+  }, [snapshot]);
+
+  useEffect(() => {
+    if (dummy.current) {
+      dummy.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [messages]);
 
   const sendMessage = async (e) => {
     e.preventDefault();
-
     const { uid, photoURL } = auth.currentUser;
 
     await addDoc(messagesRef, {
@@ -123,12 +130,15 @@ function ChatRoom() {
     });
 
     setFormValue('');
-    dummy.current.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (
     <>
-      <main className="flex-grow-1 overflow-auto px-3 d-flex flex-column" style={{ paddingBottom: '12vh' }}>
+      {/* Message area */}
+      <div
+        className="flex-grow-1 overflow-auto px-3 d-flex flex-column"
+        style={{ minHeight: 0, paddingTop: '10vh' }}
+      >
         {messages.map(msg => (
           <ChatMessage
             key={msg.id}
@@ -138,12 +148,20 @@ function ChatRoom() {
           />
         ))}
         <span ref={dummy}></span>
-      </main>
+      </div>
 
+      {/* Form area */}
       <form
         onSubmit={sendMessage}
-        className="chat-form position-fixed bottom-0 w-100 d-flex align-items-center px-3 py-2"
-        style={{ height: '10vh' }}
+        className="chat-form w-100 d-flex align-items-center px-3 py-2 bg-body"
+        style={{
+          height: '60px',
+          borderTop: '1px solid #ddd',
+          position: 'sticky',
+          bottom: 0,
+          zIndex: 999,
+          backgroundColor: 'inherit'
+        }}
       >
         <input
           type="text"
@@ -296,6 +314,7 @@ function ChatMessage({ message, editingId, setEditingId }) {
           style={{
             maxWidth: '70%',
             minWidth: '70px',
+            maxHeight: '100%',
             wordWrap: 'break-word',
             marginRight: isSent ? '10px' : '0',
             textAlign: 'center',
