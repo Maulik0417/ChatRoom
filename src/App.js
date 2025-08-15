@@ -283,11 +283,7 @@ function ChatMessage({ message, editingId, setEditingId }) {
   return (
     <div
       className={`d-flex align-items-center my-2 ${isSent ? 'flex-row-reverse' : ''}`}
-      onContextMenu={handleContextMenu}
-      onTouchStart={startTouchTimer}
-      onTouchEnd={cancelTouchTimer}
-      onTouchMove={cancelTouchTimer}
-      onTouchCancel={cancelTouchTimer}
+    
     >
       <img
         src={photoURL || avatarpic}
@@ -315,6 +311,11 @@ function ChatMessage({ message, editingId, setEditingId }) {
       ) : (
         <p
           className={`p-3 rounded-pill shadow-sm mb-0 ${messageClass}`}
+          onContextMenu={handleContextMenu}
+          onTouchStart={startTouchTimer}
+          onTouchEnd={cancelTouchTimer}
+          onTouchMove={cancelTouchTimer}
+          onTouchCancel={cancelTouchTimer}
           style={{
             maxWidth: '70%',
             minWidth: '70px',
@@ -338,7 +339,7 @@ function ChatMessage({ message, editingId, setEditingId }) {
             top: menuPosition.y,
             left: menuPosition.x,
             zIndex: 9999,
-            minWidth: '120px'
+            minWidth: '120px',
           }}
         >
           <button className="dropdown-item" onClick={handleEdit}>Edit</button>
